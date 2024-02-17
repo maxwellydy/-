@@ -1,0 +1,15 @@
+library(ggplot2)
+library(reshape2)
+library(Rmisc)
+data=read.csv("faith_pd.csv",row.names=1)
+data=data[,1:500]
+data=t(data)
+data=data.frame(data)
+data$depth=gsub("depth.","",row.names(data))
+data$depth=gsub("_iter..+","",data$depth)
+data$depth=as.numeric(data$depth)
+data=melt(data,id.vars = "depth")
+aa=summarySE(data, measurevar = "value",
+             groupvars = c("depth","variable"))
+m<-ggplot(aa,aes(x=depth,y=value))
+m+geom_smooth(aes(color=variable),se=F)+labs(color="Sample")
